@@ -177,11 +177,11 @@ label.btn input:checked+span {
 
       <div class="onButtonsAndOr">
             <div id="andSelect" ><select id="andDropDown" multiple onchange='filterText()'>
-              <option disabled selected>Select</option>
+              <option disabled selected value="select">Select</option>
             </select></div>
 
             <div id="orSelect"><select id="orDropDown" onchange='filterText()'>
-              <option disabled selected>Select</option>
+              <option disabled selected value="select">Select</option>
               <option value="All">All</option>
             
             </select></div>
@@ -219,14 +219,14 @@ label.btn input:checked+span {
         var isChecked = $(this).is(':checked');
         $("#orSelect").hide();
         $("#andSelect").show();
-        $('.content').show();
+        $('.content').show();$("#andDropDown").val("select")
     });
 
     $('#onOr').click(function () {
         var isChecked = $(this).is(':checked');
         $("#andSelect").hide();
         $("#orSelect").show();
-        $('.content').show();
+        $('.content').show();$("#orDropDown").val("select")
     });
 }
   
