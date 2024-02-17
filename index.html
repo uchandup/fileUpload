@@ -95,7 +95,38 @@ table#content-table thead {
   }
 }
 
+label.btn {
+  padding: 0;
+}
 
+label.btn input {
+  opacity: 0;
+  position: absolute;
+}
+
+label.btn span {
+  text-align: center;
+  padding: 6px 12px;
+  border:1px solid;
+  display: block;
+}
+
+label.btn input:checked+span {
+  background-color: rgb(114, 110, 114);
+  color: #fff;
+}
+.col-filter{
+  display: flex;
+  gap: 30px;
+}
+.onRadioAndOr{
+  display: flex;
+
+}
+.filters{
+  gap:10px;
+  display:none;
+}
 
 
   </style>
@@ -136,6 +167,28 @@ table#content-table thead {
 
     <p class="NoteContent">content Here Note*</p>
 
+    <div class="filters">
+
+      <div class="col-filter">
+          <div class="onRadioAndOr">
+            <label class="btn btn-outline-primary"><input type="radio"id="onAnd" name="toggle"><span>And</span></label>
+            <label class="btn btn-outline-primary"><input type="radio"id="onOr" name="toggle"><span>Or</span></label>
+          </div>
+
+      <div class="onButtonsAndOr">
+            <div id="andSelect" ><select id="andDropDown" multiple onchange='filterText()'>
+              <option disabled selected>Select</option>
+            </select></div>
+
+            <div id="orSelect"><select id="orDropDown" onchange='filterText()'>
+              <option disabled selected>Select</option>
+              <option value="All">All</option>
+            
+            </select></div>
+        </div>
+      </div>
+    </div>
+
     <div class="div-table">
     <table id="content-table" class="table table-bordered">
       <thead>
@@ -159,6 +212,22 @@ table#content-table thead {
   </div>
 
   <script>
+    var cities =[];
+    //tog
+    function onRadioChecked() {
+    $('#onAnd').click(function () {
+        var isChecked = $(this).is(':checked');
+        $("#orSelect").hide();
+        $("#andSelect").show();
+    });
+
+    $('#onOr').click(function () {
+        var isChecked = $(this).is(':checked');
+        $("#andSelect").hide();
+        $("#orSelect").show();
+    });
+}
+  
 
     //excel Data
     var worksheetData = [];
@@ -256,6 +325,13 @@ table#content-table thead {
       $(".email").on('input', validateEmail);
       onkeyUp();
 
+      $("#onAnd").prop("checked", true);
+
+      $("#orSelect").hide();
+
+      onRadioChecked();
+      
+
     });
 
     document
@@ -294,10 +370,12 @@ table#content-table thead {
 
       $("#content-table").show();
 
+      $(".filters").show();
+
       // Iterate through the data and append rows
       $.each(data, function (index, item) {
         ++dataCounter;//counter 
-        var row = "<tr>";
+        var row = "<tr class='content'>";
         row +=
           "<td id='tdFn" + dataCounter + "'><input id='dataFn" + dataCounter + "' onfocus='validateChecker()' type='text' class='firstName dataBox' value='" +
           (item.First_Name ? item.First_Name : "") +
@@ -340,10 +418,70 @@ table#content-table thead {
           "'/></td>";
 
         tbody.append(row);
+
+        //dropdown Code 
+
+     cities= [...cities,item.city];
+     
+      
       });
 
       validateChecker();
-    }
+        var uinqueCites =new Set(cities);
+
+        uinqueCites.forEach(function(city) {
+        $("#andDropDown").append(`<option value="${city}">${city}</option>`);
+        $("#orDropDown").append(`<option vaue="${city}">${city}</option>`);
+
+          });
+            }
+
+
+            function filterText(){
+                if($("#onAnd").is(':checked')){
+                        var rex = $('#andDropDown').val() || [];
+
+
+                        $('.content').hide();
+                  rex.forEach(function(r){
+                        $('.content').each(function(){
+                      if(r == $(this).find(".city").val()){
+                        $(this).closest('tr').show();
+                      }else{
+
+                      }
+                    }); });
+             
+                  
+
+                }else if($("#onOr").is(':checked')){
+                  var rex=$('#orDropDown').val();
+
+                  $('.content').hide();
+
+                  $('.content').each(function(){
+                      if(rex == $(this).find(".city").val()){
+                        $(this).closest('tr').show();
+                      }else if(rex == 'All'){
+                        $('.content').show();
+                      }
+                    });
+                }
+
+
+            }
+
+            function clearFilter(){
+          
+		          $('.content').show();
+            }
+
+   
+        //$("#andDropDown").append(`<option value="${item.city}">${item.city}<option>`)
+        //$("#orDropDown").append(`<option vaue="${item.city}">${item.city}<option>`)
+
+
+
 
     function validateChecker() {
       $("#datatbody tr").each(function () {
