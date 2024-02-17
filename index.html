@@ -219,12 +219,14 @@ label.btn input:checked+span {
         var isChecked = $(this).is(':checked');
         $("#orSelect").hide();
         $("#andSelect").show();
+        $('.content').show();
     });
 
     $('#onOr').click(function () {
         var isChecked = $(this).is(':checked');
         $("#andSelect").hide();
         $("#orSelect").show();
+        $('.content').show();
     });
 }
   
